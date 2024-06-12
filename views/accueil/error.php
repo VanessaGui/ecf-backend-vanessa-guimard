@@ -1,0 +1,1 @@
+<p>Ceci est la page d'erreur, quelque chose ne va pas!</p>
