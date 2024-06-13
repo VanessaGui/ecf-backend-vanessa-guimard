@@ -1,3 +1,4 @@
+<?php require_once('header_accueil.php');?>
 <div class="title">
     <h1>Éco pratiques</h1>
 </div>

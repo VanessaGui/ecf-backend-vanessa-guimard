@@ -11,19 +11,6 @@
     <script type="module" src="script.js"></script>
   </head>
   <body>
-    <header>
-      <nav>
-        <?php if ( $controller = 'accueil'){ ?>
-          <a href='?controller=accueil&action=index'>Accueil</a>
-          <a href='?controller=accueil&action=connect'>Se connecter</a>
-        <?php  } else if ( $controller = 'administration'){  ?>
-          <a href='?controller=administration&action=index'>Administration</a>
-          <a href='?controller=accueil&action=deconnect'>Se déconnecter</a>
-        <?php } ?>
-      <nav>
-    </header>
-
     <?php require_once('routes.php'); ?>
-
   <body>
 <html>

@@ -34,49 +34,56 @@ class AccueilConnection {
           }
         } header('Location: index.php?controller=admin&action=index');
       }
-     
     }
 
     public static function createConnection(){ 
       $db = Db::getInstance();
-      $login = strip_tags($_POST['login']);
-      $mail = strip_tags($_POST['mail']);
-      $pass = strip_tags($_POST['pass']);
-
-      if (!isset($_POST['mail']) || empty($_POST['mail']) || !filter_var($_POST['mail'],FILTER_VALIDATE_EMAIL) ){
+      if (isset($_POST['mail']) || !empty($_POST['mail']) || filter_var($_POST['mail'],FILTER_VALIDATE_EMAIL) ){
+        $login2 = strip_tags($_POST['newlogin']);
+        $mail = strip_tags($_POST['mail']);
+        $pass2 = strip_tags($_POST['mdp']);
         $query = $db->prepare('INSERT INTO users (login, password, email, role) VALUES (:login, :password, :email, :role)');
         $query->execute([
-          'login' => $login,
-          'password' => password_hash($pass, PASSWORD_DEFAULT),
+          'login' => $login2,
+          'password' => password_hash($pass2, PASSWORD_DEFAULT),
           'email' => $mail,
           'role' => 'éditeur',
         ]);
         foreach($query->fetchAll() as $createConnection) {
-        $newConnection = new Connection($createConnection['id_user'], $createConnection['login'], $createConnection['password'], $createConnection['email'], $createConnection['role']);
+        $newConnection = new AccueilConnection($createConnection['id_user'], $createConnection['login'], $createConnection['password'], $createConnection['email'], $createConnection['role']);
         }
-        return $newConnection;
+        header('Location: index.php?controller=accueil&action=connect');
       }
-      header('Location: index.php?controller=admin&action=index');
+      
+    }
+
+    public static function selectUser($id){ 
+      $db = Db::getInstance();
+      $id = intval($id);
+      $query = $db->prepare('SELECT * FROM users WHERE id_user =  :id');
+      $query->execute(['id' => $id]);
+      foreach($query->fetchAll() as $users) {
+      $user = new AccueilConnection($users['id_user'], $users['login'],  $users['password'],  $users['email'], $users['role']);
+      }
+      return $user;
     }
 
     public static function modifyPassword($id){
       $db = Db::getInstance();
       $id = intval($_POST['postid']);
-      $pass = strip_tags($_POST['pass']);
-      $query = $db -> prepare('UPDATE users SET password = :pass WHERE id_users = :id');
-      $query-> execute([
-          'id' => $id,
-          'pass' => password_hash($pass, PASSWORD_DEFAULT),
-      ]);
-      $modifyPassword = $query->fetchAll();
-      header('Location: index.php?controller=admin&action=index'); 
+      $pass = strip_tags($_POST['mdp']);
+      $password = strip_tags($_POST['pass']);
+      if($pass = $password){
+        $query = $db -> prepare('UPDATE users SET password = :pass WHERE id_user = :id');
+        $query-> execute([
+            'id' => $id,
+            'pass' => password_hash($pass, PASSWORD_DEFAULT),
+        ]);
+        $modifyPassword = $query->fetchAll();}
+        header('Location: index.php?controller=admin&action=index'); 
+      
     }
 
-    public static function logout($id){
-      session_start();
-      $_SESSION = [];
-      session_destroy();
-      header('Location: index.php?controller=accueil&action=index'); 
-    }
+  
 }
 ?>

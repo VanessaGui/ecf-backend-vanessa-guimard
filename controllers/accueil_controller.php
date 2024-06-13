@@ -6,7 +6,7 @@
     }
 
     public function article() {
-      $articleLire = Articles::selectArticle();
+      $articleLire = Articles::selectArticle($_GET['id']);
       require_once('views/accueil/article.php');
     }
 
@@ -20,18 +20,9 @@
     }
 
     public function createConnexion() {
-      $newConnect = AccueilConnection::createConnexion();
+      $newConnect = AccueilConnection::createConnection();
       require_once('views/accueil/connect.php');
     }
 
-    public function modifyPassword() {
-      $newPassword = AccueilConnection::modifyPassword();
-      require_once('views/accueil/connect.php');
-    }
-
-    public function deconnect() {
-      $deconnect = AccueilConnection::logout();
-      require_once('views/accueil/connect.php');
-    }
   }
 ?>
